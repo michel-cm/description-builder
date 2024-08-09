@@ -1,13 +1,15 @@
 <template>
-  <div class="panel__top">
+<div class="panel__top">
     <div class="panel__basic-actions"></div>
-  </div>
+    <div class="panel__switcher"></div>
+</div>
   <div class="editor-row">
-  <div class="editor-canvas">
-    <div id="gjs"><h1>Texto de início</h1></div>
-  </div>
+    <div class="editor-canvas">
+      <div id="gjs"><h1>Texto de início</h1></div>
+    </div>
   <div class="panel__right">
     <div class="layers-container"></div>
+    <div class="styles-container"></div>
   </div>
 </div>
   <div id="blocks"></div>
@@ -63,10 +65,11 @@ onMounted(() => {
     ]
   },
 
-  /* PAINEL DE CAMADAS */
+  /* FERRAMENTA DE CAMADAS */
   layerManager: {
     appendTo: '.layers-container'
   },
+  
   // We define a default panel as a sidebar to contain layers
   panels: {
     defaults: [{
@@ -84,8 +87,104 @@ onMounted(() => {
         // instead of the `width` (default)
         keyWidth: 'flex-basis',
       },
-    }]
-  }
+    },
+    {
+        id: 'panel-switcher',
+        el: '.panel__switcher',
+        buttons: [{
+            id: 'show-layers',
+            active: true,
+            label: 'Layers',
+            command: 'show-layers',
+            // Once activated disable the possibility to turn it off
+            togglable: false,
+          }, {
+            id: 'show-style',
+            active: true,
+            label: 'Styles',
+            command: 'show-styles',
+            togglable: false,
+        }],
+      }]
+  },
+
+  // The Selector Manager allows to assign classes and
+  // different states (eg. :hover) on components.
+  // Generally, it's used in conjunction with Style Manager
+  // but it's not mandatory
+  selectorManager: {
+    appendTo: '.styles-container'
+  },
+  styleManager: {
+    appendTo: '.styles-container',
+    sectors: [{
+        name: 'Dimension',
+        open: false,
+        // Use built-in properties
+        buildProps: ['width', 'min-height', 'padding'],
+        // Use `properties` to define/override single property
+        properties: [
+          {
+            // Type of the input,
+            // options: integer | radio | select | color | slider | file | composite | stack
+            type: 'integer',
+            name: 'The width', // Label for the property
+            property: 'width', // CSS property (if buildProps contains it will be extended)
+            units: ['px', '%'], // Units, available only for 'integer' types
+            defaults: 'auto', // Default value
+            min: 0, // Min value, available only for 'integer' types
+          }
+        ]
+      },{
+        name: 'Extra',
+        open: false,
+        buildProps: ['background-color', 'box-shadow', 'custom-prop'],
+        properties: [
+          {
+            id: 'custom-prop',
+            name: 'Custom Label',
+            property: 'font-size',
+            type: 'select',
+            defaults: '32px',
+            // List of options, available only for 'select' and 'radio'  types
+            options: [
+              { value: '12px', name: 'Tiny' },
+              { value: '18px', name: 'Medium' },
+              { value: '32px', name: 'Big' },
+            ],
+         }
+        ]
+      }]
+  },
+  });
+
+  /* Comandos personalizados para alternar visibilidade do layerManager e styleManager */
+  // Define commands
+  editor.Commands.add('show-layers', {
+    getRowEl(editor) { return editor.getContainer().closest('.editor-row'); },
+    getLayersEl(row) { return row.querySelector('.layers-container') },
+
+    run(editor, sender) {
+      const lmEl = this.getLayersEl(this.getRowEl(editor));
+      lmEl.style.display = '';
+    },
+    stop(editor, sender) {
+      const lmEl = this.getLayersEl(this.getRowEl(editor));
+      lmEl.style.display = 'none';
+    },
+  });
+  editor.Commands.add('show-styles', {
+    getRowEl(editor) { return editor.getContainer().closest('.editor-row'); },
+    getStyleEl(row) { return row.querySelector('.styles-container') },
+
+    run(editor, sender) {
+      const smEl = this.getStyleEl(this.getRowEl(editor));
+      smEl.style.display = '';
+    },
+    stop(editor, sender) {
+      const smEl = this.getStyleEl(this.getRowEl(editor));
+      smEl.style.display = 'none';
+    },
   });
 
   /* ADICIONANDO UM BLOCO DINAMICAMENTE */
@@ -223,8 +322,13 @@ min-height: auto;
 }
 
 .panel__right {
-  flex-basis: 230px;
+  flex-basis: 300px;
   position: relative;
   overflow-y: auto;
+}
+
+/* GERENTE DE ESTILOS */
+.panel__switcher {
+  position: initial;
 }
 </style>
