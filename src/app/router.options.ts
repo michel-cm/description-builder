@@ -18,5 +18,10 @@ export default <RouterOptions>{
       path: '/grapejs',
       component: () => import('../views/Grapejs/Grapejs.vue'),
     },
+    {
+      name: 'zero',
+      path: '/zero',
+      component: () => import('../views/Zero/Zero.vue'),
+    },
   ],
 };
