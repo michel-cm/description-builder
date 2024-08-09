@@ -2,7 +2,6 @@
   <div class="main">
     <NuxtLink to="solo">Solo Example</NuxtLink>
     <NuxtLink to="grapejs">Grape Example</NuxtLink>
-    <NuxtLink to="zero">Zero Example</NuxtLink>
   </div>
 </template>
 
