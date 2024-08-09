@@ -59,6 +59,16 @@ onMounted(() => {
   },
   });
 
+  /* ADICIONANDO UM BLOCO DINAMICAMENTE */
+  editor.BlockManager.add('my-block-dinamico', {
+    label: '<b>Bloco Dinamico</b>', // You can use HTML/SVG inside labels
+    attributes: { class:'gjs-block-section' },
+    content: `<section>
+      <h1>Um bloco dinamico</h1>
+      <h2>This is just a Lorem text: Lorem ipsum dolor sit amet</h2>
+    </section>`,
+})
+
   /* ADICIONANDO COMPONENTE */
   editor.BlockManager.add('my-block-id', {
   label: '<b>My component</b>', // Adicione o rótulo aqui
