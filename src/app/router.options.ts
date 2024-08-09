@@ -4,9 +4,19 @@ import type { RouterOptions } from '@nuxt/schema';
 export default <RouterOptions>{
   routes: () => [
     {
-      name: 'home',
+      name: 'main',
       path: '/',
       component: () => import('../views/MainView/MainView.vue'),
+    },
+    {
+      name: 'solo',
+      path: '/solo',
+      component: () => import('../views/Solo/Solo.vue'),
+    },
+    {
+      name: 'grapejs',
+      path: '/grapejs',
+      component: () => import('../views/Grapejs/Grapejs.vue'),
     },
   ],
 };

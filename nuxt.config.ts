@@ -3,6 +3,17 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
 
+  app: {
+    head: {
+      title: 'DescriptionBuilder',
+      htmlAttrs: {
+        lang: 'pt-BR',
+      },
+      script: [],
+      link: [],
+    },
+  },
+
   css: [    
     '@/assets/css/reset.css',
   ],

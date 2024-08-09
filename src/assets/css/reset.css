@@ -29,6 +29,8 @@ button {
   border: none;
   cursor: pointer;
   padding: 0;
+
+  display: block;
 }
 
 ul,
