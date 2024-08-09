@@ -10,6 +10,7 @@
   <div class="panel__right">
     <div class="layers-container"></div>
     <div class="styles-container"></div>
+    <div class="traits-container"></div>
   </div>
 </div>
   <div id="blocks"></div>
@@ -64,13 +65,9 @@ onMounted(() => {
       }
     ]
   },
-
-  /* FERRAMENTA DE CAMADAS */
-  layerManager: {
-    appendTo: '.layers-container'
-  },
   
   // We define a default panel as a sidebar to contain layers
+  /* PAINEL DA DIREITA COM BOTOES DAS FERRAMENTAS ( LAYERS, STYLES E TRAITS ) */
   panels: {
     defaults: [{
       id: 'layers',
@@ -104,14 +101,26 @@ onMounted(() => {
             label: 'Styles',
             command: 'show-styles',
             togglable: false,
+        }, {
+            id: 'show-traits',
+            active: true,
+            label: 'Traits',
+            command: 'show-traits',
+            togglable: false,
         }],
-      }]
+      },]
+  },
+
+    /* FERRAMENTA DE CAMADAS */
+    layerManager: {
+    appendTo: '.layers-container'
   },
 
   // The Selector Manager allows to assign classes and
   // different states (eg. :hover) on components.
   // Generally, it's used in conjunction with Style Manager
   // but it's not mandatory
+  /* FERRAMENTA DE ESTILOS (STYLES) */
   selectorManager: {
     appendTo: '.styles-container'
   },
@@ -156,6 +165,11 @@ onMounted(() => {
         ]
       }]
   },
+
+  /* FERRAMENTA DE CARACTERISTICAS (TRAITS) */
+  traitManager: {
+    appendTo: '.traits-container',
+  },
   });
 
   /* Comandos personalizados para alternar visibilidade do layerManager e styleManager */
@@ -186,6 +200,18 @@ onMounted(() => {
       smEl.style.display = 'none';
     },
   });
+  editor.Commands.add('show-traits', {
+  getTraitsEl(editor) {
+    const row = editor.getContainer().closest('.editor-row');
+    return row.querySelector('.traits-container');
+  },
+  run(editor, sender) {
+    this.getTraitsEl(editor).style.display = '';
+  },
+  stop(editor, sender) {
+    this.getTraitsEl(editor).style.display = 'none';
+  },
+});
 
   /* ADICIONANDO UM BLOCO DINAMICAMENTE */
   editor.BlockManager.add('my-block-dinamico', {
