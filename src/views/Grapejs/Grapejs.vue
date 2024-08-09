@@ -2,9 +2,14 @@
   <div class="panel__top">
     <div class="panel__basic-actions"></div>
   </div>
-  <div id="gjs">
-    <h1>Hello World Component!</h1>
+  <div class="editor-row">
+  <div class="editor-canvas">
+    <div id="gjs"><h1>Texto de início</h1></div>
   </div>
+  <div class="panel__right">
+    <div class="layers-container"></div>
+  </div>
+</div>
   <div id="blocks"></div>
 </template>
 
@@ -57,6 +62,30 @@ onMounted(() => {
       }
     ]
   },
+
+  /* PAINEL DE CAMADAS */
+  layerManager: {
+    appendTo: '.layers-container'
+  },
+  // We define a default panel as a sidebar to contain layers
+  panels: {
+    defaults: [{
+      id: 'layers',
+      el: '.panel__right',
+      // Make the panel resizable
+      resizable: {
+        maxDim: 350,
+        minDim: 200,
+        tc: 0, // Top handler
+        cl: 1, // Left handler
+        cr: 0, // Right handler
+        bc: 0, // Bottom handler
+        // Being a flex child we need to change `flex-basis` property
+        // instead of the `width` (default)
+        keyWidth: 'flex-basis',
+      },
+    }]
+  }
   });
 
   /* ADICIONANDO UM BLOCO DINAMICAMENTE */
@@ -178,5 +207,24 @@ height: 100%;
 width: auto;
 height: auto;
 min-height: auto;
+}
+
+/* ROW E PAINEL DE CAMDADAS */
+.editor-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  height: 400px;
+}
+
+.editor-canvas {
+  flex-grow: 1;
+}
+
+.panel__right {
+  flex-basis: 230px;
+  position: relative;
+  overflow-y: auto;
 }
 </style>
