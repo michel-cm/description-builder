@@ -1,6 +1,7 @@
 <template>
 <div class="panel__top">
     <div class="panel__basic-actions"></div>
+    <div class="panel__devices"></div>
     <div class="panel__switcher"></div>
 </div>
   <div class="editor-row">
@@ -34,6 +35,17 @@ onMounted(() => {
   storageManager: false,
   // Avoid any default panel
   panels: { defaults: [] },
+
+  deviceManager: {
+    devices: [{
+        name: 'Desktop',
+        width: '', // default size
+      }, {
+        name: 'Mobile',
+        width: '320px', // this value will be used on canvas width
+        widthMedia: '480px', // this value will be used in CSS @media
+    }]
+  },
 
   /* BLOCOS */
   blockManager: {
@@ -69,7 +81,8 @@ onMounted(() => {
   // We define a default panel as a sidebar to contain layers
   /* PAINEL DA DIREITA COM BOTOES DAS FERRAMENTAS ( LAYERS, STYLES E TRAITS ) */
   panels: {
-    defaults: [{
+    defaults: [
+      {
       id: 'layers',
       el: '.panel__right',
       // Make the panel resizable
@@ -85,6 +98,22 @@ onMounted(() => {
         keyWidth: 'flex-basis',
       },
     },
+    {
+        id: 'panel-devices',
+        el: '.panel__devices',
+        buttons: [{
+            id: 'device-desktop',
+            label: 'D',
+            command: 'set-device-desktop',
+            active: true,
+            togglable: false,
+          }, {
+            id: 'device-mobile',
+            label: 'M',
+            command: 'set-device-mobile',
+            togglable: false,
+        }],
+      },
     {
         id: 'panel-switcher',
         el: '.panel__switcher',
@@ -172,7 +201,7 @@ onMounted(() => {
   },
   });
 
-  /* Comandos personalizados para alternar visibilidade do layerManager e styleManager */
+  /* Comandos personalizados para alternar visibilidade do layerManager, styleManager e traits*/
   // Define commands
   editor.Commands.add('show-layers', {
     getRowEl(editor) { return editor.getContainer().closest('.editor-row'); },
@@ -212,6 +241,18 @@ onMounted(() => {
     this.getTraitsEl(editor).style.display = 'none';
   },
 });
+
+  /* Comandos para switch devices */
+  // Commands
+  editor.Commands.add('set-device-desktop', {
+    run: editor => editor.setDevice('Desktop')
+  });
+  editor.Commands.add('set-device-mobile', {
+    run: editor => editor.setDevice('Mobile')
+  });
+  /* editor.setDevicemétodo para alterar o tamanho da viewport. Caso precise disparar uma ação na alteração do dispositivo, você pode configurar um listener como este: */
+  editor.on('change:device', () => console.log('Current device: ', editor.getDevice()));
+  /* caso queira mobileFirst é só setar diretamente o device */ //-> editor.setDevice('Mobile');
 
   /* ADICIONANDO UM BLOCO DINAMICAMENTE */
   editor.BlockManager.add('my-block-dinamico', {
@@ -313,6 +354,11 @@ editor.on('abort:export-template', () => console.log('Command aborted'));
   justify-content: space-between;
 }
 .panel__basic-actions {
+  position: initial;
+}
+
+/* DEVICES */
+.panel__devices {
   position: initial;
 }
 
